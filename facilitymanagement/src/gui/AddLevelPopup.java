@@ -18,7 +18,7 @@ import maintainables.Level;
 /*
  * Das AddLevelPopup ist ein Popup, das ein Formular zum Erstellen einer neuen Etage enthält.
  * 
- * @authro Florian Schmidt
+ * @author Florian Schmidt
  */
 public class AddLevelPopup extends JDialog {
     private JTextField maxRoomsField;
