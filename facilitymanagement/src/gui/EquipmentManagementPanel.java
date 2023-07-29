@@ -10,6 +10,11 @@ import maintainables.Level;
 import maintainables.Room;
 import global.GlobalVerwaltung;
 
+/*
+ * Das EquipmentManagementPanel ist das Panel, das die Geräteverwaltung enthält.
+ * 
+ * @author: Alexander Ansorge
+ */
 public class EquipmentManagementPanel extends JPanel {
 
     private JTable equipmentTable;
@@ -18,30 +23,31 @@ public class EquipmentManagementPanel extends JPanel {
 
     public EquipmentManagementPanel() {
 
+        // Initialisiere die Tabellenmodelle und -spalten
         String[] columnNames = { "ID", "Name", "Type", "Raum", "Hersteller", "Model",
                 "Kaufdatum", "Letzte Wartung", "Zustand", "Funktionalität" };
         tableModel = new DefaultTableModel(columnNames, 0);
         equipmentTable = new JTable(tableModel);
 
+        // Aktualisiere die Geräteinformationen und fülle die Tabelle mit den Daten
         updateEquipment();
-
         if (equipment != null) {
             for (Equipment equip : equipment) {
                 addEquipmentToTable(equip);
             }
         }
 
+        // Erstelle ScrollPane für die Tabelle und setze die Dimensionen
         JScrollPane scrollPane = new JScrollPane(equipmentTable);
         scrollPane.setPreferredSize(new Dimension(800, 400));
 
+        // Layout und Komponenten zum Panel hinzufügen
         setLayout(new BorderLayout());
         add(scrollPane, BorderLayout.CENTER);
-
-        // Buttons or other components could be added here, similar to your Todos panel.
     }
 
+    // Methode zum Hinzufügen eines Geräts zur Tabelle
     private void addEquipmentToTable(Equipment equip) {
-
         String[] rowData = { equip.getId(), equip.getName(), equip.getType().toString(), equip.getRoom().toString(),
                 equip.getManufacturer(), equip.getModel(), equip.getDateOfPurchase().toString(),
                 equip.getLastMaintenanceDate().toString(), equip.getCondition().toString(),
@@ -49,12 +55,12 @@ public class EquipmentManagementPanel extends JPanel {
         tableModel.addRow(rowData);
     }
 
+    // Methode, um die Gerätetabelle zu aktualisieren
     public void updateEquipmentTable() {
         tableModel.setRowCount(0);
 
         if (equipment != null) {
             updateEquipment();
-
         }
 
         for (Equipment equip : equipment) {
@@ -62,8 +68,9 @@ public class EquipmentManagementPanel extends JPanel {
         }
     }
 
+    // Methode, um die Geräteinformationen zu aktualisieren
     public void updateEquipment() {
-        // Query for all equipments
+        // Abfrage für alle Geräte
         ArrayList<Building> buildings = GlobalVerwaltung.getBuildingVerwaltung().getBuildings();
         for (Building building : buildings) {
             for (Level level : building.getLevels()) {
@@ -75,5 +82,4 @@ public class EquipmentManagementPanel extends JPanel {
             }
         }
     }
-
 }

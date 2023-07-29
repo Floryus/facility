@@ -21,35 +21,36 @@ import java.time.ZoneId;
  * @author: Alexander Ansorge
  */
 public class AddEquipmentPopup extends JDialog {
+    // Deklaration von Feldern zur Erfassung von Equipment Informationen
     private JTextField nameField, manufacturerField, modelField;
     private JComboBox<EquipTypeEnum> typeComboBox;
     private JComboBox<EquipConditionEnum> conditionComboBox;
     private JSpinner dateOfPurchaseSpinner, lastMaintenanceDateSpinner;
     private JCheckBox functionalCheckBox;
 
+    // Referenzen auf das Gebäudeverwaltungsfenster und den Raum, in dem das neue Equipment platziert wird
     private BuildingManagementPanel bp;
     private Room room;
 
     public AddEquipmentPopup(BuildingManagementPanel bp, Room room) {
         this.room = room;
         this.bp = bp;
-        initComponents();
+        initComponents(); // Initialisiert die Komponenten der Benutzeroberfläche
     }
 
     private void initComponents() {
-        // Setting the title and the closing operation
+        // Setzt den Titel und das Schließen-Verhalten des Dialogs
         setTitle("Neues Equipment hinzufügen");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Creating the "Create Equipment" button
+        // Erstellung des "Equipment erstellen" Buttons und Hinzufügen des ActionListeners
         JButton createButton = new JButton("Equipment erstellen");
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Create a new Equipment and add it to the room
+                // Hier wird ein neues Equipment erstellt und zum Raum hinzugefügt
 
-                // TODO: add different subclasses of equipment
-
+                // Erzeugung eines neuen Equipment-Objekts mit den eingegebenen Daten
                 Equipment equipment = new Equipment(
                         IdManager.generateNewId(),
                         nameField.getText(),
@@ -63,25 +64,26 @@ public class AddEquipmentPopup extends JDialog {
                                 ZoneId.systemDefault()),
                         (EquipConditionEnum) conditionComboBox.getSelectedItem(),
                         functionalCheckBox.isSelected());
-                room.addEquipment(equipment);
+                room.addEquipment(equipment); // Hinzufügen des neuen Equipments zum Raum
 
+                // Speichern der Gebäudeinformationen
                 GlobalVerwaltung.getBuildingVerwaltung().saveBuildings();
 
-                // Update the tree view
+                // Aktualisieren der Baumansicht
                 bp.reloadTree();
 
-                // Close the popup window
+                // Schließen des Dialogfensters
                 dispose();
             }
         });
 
-        // Create the panel for the input fields
+        // Erstellung und Konfiguration des Panels für die Eingabefelder
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Add each input field and configure them accordingly
+        // Hinzufügen jedes Eingabefelds und entsprechende Konfiguration
         addNameField(contentPanel, gbc);
         addTypeField(contentPanel, gbc);
         addManufacturerField(contentPanel, gbc);
@@ -91,15 +93,16 @@ public class AddEquipmentPopup extends JDialog {
         addConditionField(contentPanel, gbc);
         addFunctionalField(contentPanel, gbc);
 
-        // Button panel at the bottom
+        // Hinzufügen des Buttons zum Panel am unteren Rand
         gbc.gridx = 1;
         gbc.gridy++;
         gbc.anchor = GridBagConstraints.EAST;
         contentPanel.add(createButton, gbc);
 
+        // Hinzufügen des Panels zum Dialogfenster
         add(contentPanel, BorderLayout.CENTER);
 
-        // Set the panel as the content of the popup
+        // Festlegen des Panels als Inhalt des Dialogs
         setContentPane(contentPanel);
         pack();
     }
