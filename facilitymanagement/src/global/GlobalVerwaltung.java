@@ -3,7 +3,6 @@ package global;
 import employee.EmployeeVerwaltung;
 import maintainables.BuildingVerwaltung;
 import todos.TodoVerwaltung;
-import maintainables.equipment.EquipmentVerwaltung;;
 
 /* GlobalVerwaltung bietet getter für die zentralen Verwaltungsklassen.
  * Diese können nun von überall statisch aufgerufen werden.
@@ -19,7 +18,6 @@ public class GlobalVerwaltung {
     private static BuildingVerwaltung buildingVerwaltung = new BuildingVerwaltung();
     private static EmployeeVerwaltung employeeVerwaltung = new EmployeeVerwaltung();
     private static TodoVerwaltung todoVerwaltung = new TodoVerwaltung();
-    private static EquipmentVerwaltung equipmentVerwaltung = new EquipmentVerwaltung();
 
     public static BuildingVerwaltung getBuildingVerwaltung() {
         return buildingVerwaltung;
@@ -31,10 +29,6 @@ public class GlobalVerwaltung {
 
     public static TodoVerwaltung getTodoVerwaltung() {
         return todoVerwaltung;
-    }
-
-    public static EquipmentVerwaltung getEquipmentVerwaltung() {
-        return equipmentVerwaltung;
     }
 
 }

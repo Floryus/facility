@@ -3,29 +3,32 @@ package gui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.List;
-
+import java.util.ArrayList;
+import maintainables.Building;
 import maintainables.Equipment;
+import maintainables.Level;
+import maintainables.Room;
 import global.GlobalVerwaltung;
 
 public class EquipmentManagementPanel extends JPanel {
 
     private JTable equipmentTable;
     private DefaultTableModel tableModel;
-    List<Equipment> equipment;
+    ArrayList<Equipment> equipment = new ArrayList<>();
 
     public EquipmentManagementPanel() {
-        EquipmentManagementPanel parent = this;
 
-        String[] columnNames = {"ID", "Name", "Type", "Room", "Manufacturer", "Model",
-                "Date of Purchase", "Last Maintenance Date", "Condition", "Functional"};
+        String[] columnNames = { "ID", "Name", "Type", "Raum", "Hersteller", "Model",
+                "Kaufdatum", "Letzte Wartung", "Zustand", "Funktionalität" };
         tableModel = new DefaultTableModel(columnNames, 0);
         equipmentTable = new JTable(tableModel);
 
-        equipment = GlobalVerwaltung.getEquipmentVerwaltung().getEquipment();
+        updateEquipment();
 
-        for (Equipment equip : equipment) {
-            addEquipmentToTable(equip);
+        if (equipment != null) {
+            for (Equipment equip : equipment) {
+                addEquipmentToTable(equip);
+            }
         }
 
         JScrollPane scrollPane = new JScrollPane(equipmentTable);
@@ -41,18 +44,36 @@ public class EquipmentManagementPanel extends JPanel {
 
         String[] rowData = { equip.getId(), equip.getName(), equip.getType().toString(), equip.getRoom().toString(),
                 equip.getManufacturer(), equip.getModel(), equip.getDateOfPurchase().toString(),
-                equip.getLastMaintenanceDate().toString(), equip.getCondition().toString(), 
-                Boolean.toString(equip.isFunctional())};
+                equip.getLastMaintenanceDate().toString(), equip.getCondition().toString(),
+                Boolean.toString(equip.isFunctional()) };
         tableModel.addRow(rowData);
     }
 
     public void updateEquipmentTable() {
         tableModel.setRowCount(0);
 
-        equipment = GlobalVerwaltung.getEquipmentVerwaltung().getEquipment();
+        if (equipment != null) {
+            updateEquipment();
+
+        }
 
         for (Equipment equip : equipment) {
             addEquipmentToTable(equip);
         }
     }
+
+    public void updateEquipment() {
+        // Query for all equipments
+        ArrayList<Building> buildings = GlobalVerwaltung.getBuildingVerwaltung().getBuildings();
+        for (Building building : buildings) {
+            for (Level level : building.getLevels()) {
+                for (Room room : level.getRooms()) {
+                    for (Equipment equip : room.getEquipment()) {
+                        equipment.add(equip);
+                    }
+                }
+            }
+        }
+    }
+
 }

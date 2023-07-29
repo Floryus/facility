@@ -26,18 +26,28 @@ public class Equipment extends Maintainable implements Comparable<Equipment> {
      * Der Konstruktor der Equipment-Klasse erzeugt ein neues Equipment.
      * 
      * @param id Die eindeutige ID des Equipments.
+     * 
      * @param name Der Name des Equipments.
+     * 
      * @param type Der Typ des Equipments.
+     * 
      * @param room Der Raum, in dem sich das Equipment befindet.
+     * 
      * @param manufacturer Der Hersteller des Equipments.
+     * 
      * @param model Das Modell des Equipments.
+     * 
      * @param dateOfPurchase Das Kaufdatum des Equipments.
+     * 
      * @param lastMaintenanceDate Das Datum der letzten Wartung.
+     * 
      * @param condition Der aktuelle Zustand des Equipments.
-     * @param functional Ein boolescher Wert, der angibt, ob das Equipment funktioniert oder nicht.
+     * 
+     * @param functional Ein boolescher Wert, der angibt, ob das Equipment
+     * funktioniert oder nicht.
      */
     public Equipment(String id, String name, EquipTypeEnum type, Room room, String manufacturer, String model,
-                     LocalDate dateOfPurchase, LocalDate lastMaintenanceDate, EquipConditionEnum condition, boolean functional) {
+            LocalDate dateOfPurchase, LocalDate lastMaintenanceDate, EquipConditionEnum condition, boolean functional) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -259,5 +269,9 @@ public class Equipment extends Maintainable implements Comparable<Equipment> {
             compare = name.compareTo(equipment.getName());
         }
         return compare;
+    }
+
+    public String toString() {
+        return "Equipment " + name + " in " + room.getName();
     }
 }

@@ -2,7 +2,6 @@ package gui;
 
 import enums.EquipTypeEnum;
 import global.GlobalVerwaltung;
-import maintainables.equipment.EquipmentVerwaltung;
 import maintainables.Equipment;
 import maintainables.equipment.IdManager;
 import maintainables.Room;
@@ -25,7 +24,6 @@ public class AddEquipmentPopup extends JDialog {
     private JTextField nameField, manufacturerField, modelField;
     private JComboBox<EquipTypeEnum> typeComboBox;
     private JComboBox<EquipConditionEnum> conditionComboBox;
-    private JComboBox<Room> roomComboBox;
     private JSpinner dateOfPurchaseSpinner, lastMaintenanceDateSpinner;
     private JCheckBox functionalCheckBox;
 
@@ -49,25 +47,25 @@ public class AddEquipmentPopup extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Create a new Equipment and add it to the room
+
+                // TODO: add different subclasses of equipment
+
                 Equipment equipment = new Equipment(
-                        IdManager.generateNewId(), 
-                        nameField.getText(), 
-                        (EquipTypeEnum) typeComboBox.getSelectedItem(), 
-                        (Room) roomComboBox.getSelectedItem(),
-                        manufacturerField.getText(), 
+                        IdManager.generateNewId(),
+                        nameField.getText(),
+                        (EquipTypeEnum) typeComboBox.getSelectedItem(),
+                        room,
+                        manufacturerField.getText(),
                         modelField.getText(),
-                        LocalDate.ofInstant(((java.util.Date) dateOfPurchaseSpinner.getValue()).toInstant(), ZoneId.systemDefault()),
-                        LocalDate.ofInstant(((java.util.Date) lastMaintenanceDateSpinner.getValue()).toInstant(), ZoneId.systemDefault()),
+                        LocalDate.ofInstant(((java.util.Date) dateOfPurchaseSpinner.getValue()).toInstant(),
+                                ZoneId.systemDefault()),
+                        LocalDate.ofInstant(((java.util.Date) lastMaintenanceDateSpinner.getValue()).toInstant(),
+                                ZoneId.systemDefault()),
                         (EquipConditionEnum) conditionComboBox.getSelectedItem(),
-                        functionalCheckBox.isSelected()
-                );
+                        functionalCheckBox.isSelected());
                 room.addEquipment(equipment);
 
-                // Add the new Equipment to the EquipmentVerwaltung
-                GlobalVerwaltung.getEquipmentVerwaltung().addEquipment(equipment);
-
-                // Save the changes in the EquipmentVerwaltung
-                EquipmentVerwaltung.saveEquipment();
+                GlobalVerwaltung.getBuildingVerwaltung().saveBuildings();
 
                 // Update the tree view
                 bp.reloadTree();
@@ -172,7 +170,7 @@ public class AddEquipmentPopup extends JDialog {
         JLabel conditionLabel = new JLabel("Zustand:");
         panel.add(conditionLabel, gbc);
         gbc.gridx = 1;
-        conditionComboBox = new JComboBox<>(EquipConditionEnum.values());  // Initialisiere die Zustand-JComboBox
+        conditionComboBox = new JComboBox<>(EquipConditionEnum.values()); // Initialisiere die Zustand-JComboBox
         panel.add(conditionComboBox, gbc);
     }
 
