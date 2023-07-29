@@ -1,24 +1,33 @@
 package gui;
 
-import javax.swing.*;
-
 import enums.EquipTypeEnum;
 import global.GlobalVerwaltung;
+import maintainables.equipment.EquipmentVerwaltung;
 import maintainables.Equipment;
+import maintainables.equipment.IdManager;
 import maintainables.Room;
+import enums.EquipConditionEnum;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 /*
  * Das AddEquipmentPopup ist ein Popup, das ein neues Equipment erstellt und dem Raum hinzufügt.
+ * Es hat zusätzliche Felder für die erweiterten Attribute von Equipment.
  * 
- * @author: Florian Schmidt
+ * @author: Alexander Ansorge
  */
 public class AddEquipmentPopup extends JDialog {
-    private JTextField nameField;
+    private JTextField nameField, manufacturerField, modelField;
     private JComboBox<EquipTypeEnum> typeComboBox;
+    private JComboBox<EquipConditionEnum> conditionComboBox;
+    private JComboBox<Room> roomComboBox;
+    private JSpinner dateOfPurchaseSpinner, lastMaintenanceDateSpinner;
+    private JCheckBox functionalCheckBox;
 
     private BuildingManagementPanel bp;
     private Room room;
@@ -30,69 +39,150 @@ public class AddEquipmentPopup extends JDialog {
     }
 
     private void initComponents() {
-
+        // Setting the title and the closing operation
         setTitle("Neues Equipment hinzufügen");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Erzeuge den "Gebäude erstellen" Button
-        JButton createButton = new JButton("Etage erstellen");
+        // Creating the "Create Equipment" button
+        JButton createButton = new JButton("Equipment erstellen");
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // createLevel
-
-                // Erzeuge ein neues Equipment und füge sie hinzu
-                Equipment equipment = new Equipment(nameField.getText(), (EquipTypeEnum) typeComboBox.getSelectedItem(),
-                        room);
+                // Create a new Equipment and add it to the room
+                Equipment equipment = new Equipment(
+                        IdManager.generateNewId(), 
+                        nameField.getText(), 
+                        (EquipTypeEnum) typeComboBox.getSelectedItem(), 
+                        (Room) roomComboBox.getSelectedItem(),
+                        manufacturerField.getText(), 
+                        modelField.getText(),
+                        LocalDate.ofInstant(((java.util.Date) dateOfPurchaseSpinner.getValue()).toInstant(), ZoneId.systemDefault()),
+                        LocalDate.ofInstant(((java.util.Date) lastMaintenanceDateSpinner.getValue()).toInstant(), ZoneId.systemDefault()),
+                        (EquipConditionEnum) conditionComboBox.getSelectedItem(),
+                        functionalCheckBox.isSelected()
+                );
                 room.addEquipment(equipment);
 
-                // Speichere die Änderungen
-                GlobalVerwaltung.getBuildingVerwaltung().saveBuildings();
+                // Add the new Equipment to the EquipmentVerwaltung
+                GlobalVerwaltung.getEquipmentVerwaltung().addEquipment(equipment);
 
-                // Aktualisiere die Baumansicht
+                // Save the changes in the EquipmentVerwaltung
+                EquipmentVerwaltung.saveEquipment();
+
+                // Update the tree view
                 bp.reloadTree();
 
-                // Schließe das Popup-Fenster
+                // Close the popup window
                 dispose();
             }
         });
 
-        // Erzeuge das Panel für die Eingabefelder
+        // Create the panel for the input fields
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Name
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        JLabel nameLabel = new JLabel("Name:");
-        contentPanel.add(nameLabel, gbc);
-        gbc.gridx = 1;
-        nameField = new JTextField(20);
-        contentPanel.add(nameField, gbc);
+        // Add each input field and configure them accordingly
+        addNameField(contentPanel, gbc);
+        addTypeField(contentPanel, gbc);
+        addManufacturerField(contentPanel, gbc);
+        addModelField(contentPanel, gbc);
+        addDateOfPurchaseField(contentPanel, gbc);
+        addLastMaintenanceDateField(contentPanel, gbc);
+        addConditionField(contentPanel, gbc);
+        addFunctionalField(contentPanel, gbc);
 
-        // Typ
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        JLabel typeLabel = new JLabel("Typ:");
-        contentPanel.add(typeLabel, gbc);
+        // Button panel at the bottom
         gbc.gridx = 1;
-        typeComboBox = new JComboBox<>(EquipTypeEnum.values());
-        contentPanel.add(typeComboBox, gbc);
-
-        // Button-Panel am unteren Rand
-        gbc.gridx = 1;
-        gbc.gridy = 5;
+        gbc.gridy++;
         gbc.anchor = GridBagConstraints.EAST;
         contentPanel.add(createButton, gbc);
 
         add(contentPanel, BorderLayout.CENTER);
 
-        // Setze das Panel als Inhalt des Popups
+        // Set the panel as the content of the popup
         setContentPane(contentPanel);
         pack();
-
     }
 
+    private void addNameField(JPanel panel, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy++;
+        JLabel nameLabel = new JLabel("Name:");
+        panel.add(nameLabel, gbc);
+        gbc.gridx = 1;
+        nameField = new JTextField(20);
+        panel.add(nameField, gbc);
+    }
+
+    private void addTypeField(JPanel panel, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy++;
+        JLabel typeLabel = new JLabel("Typ:");
+        panel.add(typeLabel, gbc);
+        gbc.gridx = 1;
+        typeComboBox = new JComboBox<>(EquipTypeEnum.values());
+        panel.add(typeComboBox, gbc);
+    }
+
+    private void addManufacturerField(JPanel panel, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy++;
+        JLabel manufacturerLabel = new JLabel("Hersteller:");
+        panel.add(manufacturerLabel, gbc);
+        gbc.gridx = 1;
+        manufacturerField = new JTextField(20);
+        panel.add(manufacturerField, gbc);
+    }
+
+    private void addModelField(JPanel panel, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy++;
+        JLabel modelLabel = new JLabel("Modell:");
+        panel.add(modelLabel, gbc);
+        gbc.gridx = 1;
+        modelField = new JTextField(20);
+        panel.add(modelField, gbc);
+    }
+
+    private void addDateOfPurchaseField(JPanel panel, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy++;
+        JLabel dateOfPurchaseLabel = new JLabel("Kaufdatum:");
+        panel.add(dateOfPurchaseLabel, gbc);
+        gbc.gridx = 1;
+        dateOfPurchaseSpinner = new JSpinner(new SpinnerDateModel());
+        panel.add(dateOfPurchaseSpinner, gbc);
+    }
+
+    private void addLastMaintenanceDateField(JPanel panel, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy++;
+        JLabel lastMaintenanceDateLabel = new JLabel("Letzte Wartung:");
+        panel.add(lastMaintenanceDateLabel, gbc);
+        gbc.gridx = 1;
+        lastMaintenanceDateSpinner = new JSpinner(new SpinnerDateModel());
+        panel.add(lastMaintenanceDateSpinner, gbc);
+    }
+
+    private void addConditionField(JPanel panel, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy++;
+        JLabel conditionLabel = new JLabel("Zustand:");
+        panel.add(conditionLabel, gbc);
+        gbc.gridx = 1;
+        conditionComboBox = new JComboBox<>(EquipConditionEnum.values());  // Initialisiere die Zustand-JComboBox
+        panel.add(conditionComboBox, gbc);
+    }
+
+    private void addFunctionalField(JPanel panel, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy++;
+        JLabel functionalLabel = new JLabel("Funktional:");
+        panel.add(functionalLabel, gbc);
+        gbc.gridx = 1;
+        functionalCheckBox = new JCheckBox();
+        panel.add(functionalCheckBox, gbc);
+    }
 }

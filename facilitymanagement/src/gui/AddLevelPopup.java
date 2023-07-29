@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -18,7 +19,7 @@ import maintainables.Level;
 /*
  * Das AddLevelPopup ist ein Popup, das ein Formular zum Erstellen einer neuen Etage enthält.
  * 
- * @author Florian Schmidt
+ * @author Florian Schmidt, Alexander Ansorge
  */
 public class AddLevelPopup extends JDialog {
     private JTextField maxRoomsField;
@@ -40,26 +41,36 @@ public class AddLevelPopup extends JDialog {
 
         // Erzeuge Eingabefelder
         maxRoomsField = new JTextField(5);
+        numberField = new JTextField(Integer.toString(building.getLevels().size()));
 
         // Erzeuge den "Etage erstellen" Button
         JButton createButton = new JButton("Etage erstellen");
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // createLevel
+                // Füge Inputs ein
                 int maxRooms = Integer.parseInt(maxRoomsField.getText());
+                int levelNumber = Integer.parseInt(numberField.getText());
 
-                // Erzeuge ein neue Etage und füge sie hinzu
-                Level level = new Level(building.getLevels().size(), maxRooms, building);
+                // Überprüfe ob Levels bereits existieren
+                for (Level existingLevel : building.getLevels()) {
+                    if (existingLevel.getNumber() == levelNumber) {
+                        JOptionPane.showMessageDialog(null, "Eine Etage mit dieser Nummer existiert bereits.", "Fehler", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+
+                // Erstelle ein neues Level und füge es hinzu
+                Level level = new Level(levelNumber, maxRooms, building);
                 building.addLevel(level);
 
                 // Speichere die Änderungen
                 GlobalVerwaltung.getBuildingVerwaltung().saveBuildings();
 
-                // Aktualisiere die Baumansicht
+                // Anpassung des Baums
                 bp.reloadTree();
 
-                // Schließe das Popup-Fenster
+                // Schließen des Fensters
                 dispose();
             }
         });
@@ -74,8 +85,7 @@ public class AddLevelPopup extends JDialog {
         panel.add(buildingField);
 
         panel.add(new JLabel("Etage:"));
-        numberField = new JTextField(Integer.toString(building.getLevels().size()));
-        numberField.setEditable(false);
+        numberField.setEditable(true);
         panel.add(numberField);
 
         panel.add(new JLabel("Maximale Anzahl an Räumen:"));
@@ -87,5 +97,4 @@ public class AddLevelPopup extends JDialog {
         setContentPane(panel);
         pack();
     }
-
 }
