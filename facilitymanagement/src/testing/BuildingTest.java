@@ -1,7 +1,11 @@
 package testing;
 
 import java.util.UUID;
+
+import employee.EmployeeVerwaltung;
+import global.GlobalVerwaltung;
 import maintainables.Building;
+import maintainables.BuildingVerwaltung;
 import maintainables.Level;
 
 /**
@@ -15,9 +19,12 @@ import maintainables.Level;
 public class BuildingTest {
     public static void testBuildingMethods() {
 
-        /* Erstellung eines Objekts der Klasse Building */
-        Building building = new Building("SAP", "Dietmar Hopp Allee", "16a", "Walldorf", 5);
-
+        /* Erstellung von Testobjekten der Klasse Building */
+        Building building = new Building("HWR", "Alt-Friedrichsfelde", "60", "Berlin", 5);
+        GlobalVerwaltung.getBuildingVerwaltung().addBuilding(building);
+        building = new Building("SAP", "Dietmar Hopp Allee", "16a", "Walldorf", 5);
+        GlobalVerwaltung.getBuildingVerwaltung().addBuilding(building);
+        
         /* Test getName */
         System.out.println("Building Name: " + building.getName());
 
@@ -58,6 +65,7 @@ public class BuildingTest {
         System.out.println("Building to String: " + building.toString());
 
         System.out.println("BuildingTest completed");
+
 
     }
 }

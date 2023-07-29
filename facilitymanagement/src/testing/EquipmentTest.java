@@ -2,6 +2,7 @@ package testing;
 
 import enums.EquipTypeEnum;
 import enums.RoomTypeEnum;
+import global.GlobalVerwaltung;
 import maintainables.Building;
 import maintainables.Equipment;
 import maintainables.Level;
@@ -17,7 +18,8 @@ import maintainables.Room;
  */
 public class EquipmentTest {
     public static void testEquipmentMethods() {
-        Building building = new Building("Gebäude Name", "abc Straße",  "36", "berlin", 25);
+        Building building = new Building("Google", "abc Straße",  "36", "berlin", 25);
+        GlobalVerwaltung.getBuildingVerwaltung().addBuilding(building);
         Level level = new Level(1, 30, building);
 
         /* Erstellung eines Objekts der Klasse Room, welches für das Equipment benötigt wird */

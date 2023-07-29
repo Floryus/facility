@@ -24,9 +24,10 @@ public class EmployeeTest {
     public static void testEmployeeMethods() throws Exception{
 
         /* Erstellung eines Objekts der Klasse Employee */
-        Employee employee = new Employee("Thpom", "Schmidt", GroupEnum.CLEANING);
+        Employee employee = new Employee("Florian", "Schmidt", GroupEnum.CLEANING);
         GlobalVerwaltung.getEmployeeVerwaltung().addEmployee(employee);
         employee = new Employee("Alexander", "Siege", GroupEnum.IT);
+        GlobalVerwaltung.getEmployeeVerwaltung().addEmployee(employee);
 
         /* Test getFirstName and getLastName */
         System.out.println("First Name: "+employee.getFirstName());
