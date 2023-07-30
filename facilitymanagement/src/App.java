@@ -12,12 +12,12 @@ public class App {
         EmployeeVerwaltung employeeVerwaltung = GlobalVerwaltung.getEmployeeVerwaltung();
         TodoVerwaltung todoVerwaltung = GlobalVerwaltung.getTodoVerwaltung();
         BuildingVerwaltung buildingVerwaltung = GlobalVerwaltung.getBuildingVerwaltung();
-        
+
         // Erzeugen von Testdaten - Dieser wird in der finalen Abgabe auskommentiert, da
         // wir sonst die Datenbank vollmüllen
-        
-        // TestManager testManager = new TestManager();
-        // testManager.run();
+
+        TestManager testManager = new TestManager();
+        testManager.run();
 
         // Anzeigen des GUI
         FullScreenMain gui = new FullScreenMain();

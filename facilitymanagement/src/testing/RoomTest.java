@@ -1,11 +1,16 @@
 package testing;
 
+import java.time.LocalDate;
+
+import enums.EquipConditionEnum;
 import enums.EquipTypeEnum;
 import enums.RoomTypeEnum;
 import maintainables.Building;
 import maintainables.Equipment;
 import maintainables.Level;
 import maintainables.Room;
+import maintainables.equipment.SanitaryEquipment;
+import maintainables.equipment.TechnicalEquipment;
 
 /**
  * Die Klasse RoomTest testet die einzelnen Methoden der Room-Klasse.
@@ -36,9 +41,15 @@ public class RoomTest {
         /* Test getLocation */
         System.out.println("Room Location: " + room.getLocation());
 
-        /* Erstellung und Test von Equipment-Objekten */
-        Equipment equipment1 = new Equipment("Projector", EquipTypeEnum.PROJEKTOR, room);
-        Equipment equipment2 = new Equipment("Whiteboard", EquipTypeEnum.WHITEBOARD, room);
+        /*
+         * Erstellung und Test von Equipment-Objekten
+         */
+        Equipment equipment1 = new SanitaryEquipment("1", "Toilet", EquipTypeEnum.TOILETTE, room, "manufacturer",
+                "model", LocalDate.of(2017, 10, 14), LocalDate.of(2023, 06, 13), EquipConditionEnum.LIKE_NEW, true,
+                true, true, 1, "SAP");
+        Equipment equipment2 = new TechnicalEquipment("2", "Beamer", EquipTypeEnum.PROJEKTOR, room, "manufacturer",
+                "model", LocalDate.of(2017, 10, 14), LocalDate.of(2023, 06, 13), EquipConditionEnum.LIKE_NEW, true,
+                100, "WLAN", null, null);
 
         /* Test addEquipment */
         room.addEquipment(equipment1);
