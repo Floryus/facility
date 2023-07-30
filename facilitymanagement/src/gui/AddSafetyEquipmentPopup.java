@@ -13,41 +13,51 @@ import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+/*
+ * AddSafetyEquipmentPopup ist ein Popup-Fenster, das zur Erfassung von Sicherheitsausstattungsdaten verwendet wird.
+ * Es erbt von AddGeneralEquipmentPopup und fügt zusätzliche Felder für Sicherheitsausstattung hinzu.
+ * 
+ * @author Alexander Ansorge
+ */
 public class AddSafetyEquipmentPopup extends AddGeneralEquipmentPopup {
-    private JTextField batteryLifeField;
-    private JTextField connectivityField;
-    private JTextField rangeField;
-    private JTextField logPathField;
+    private JTextField batteryLifeField; // Textfeld für die Batterielebensdauer
+    private JTextField connectivityField; // Textfeld für die Konnektivität
+    private JTextField rangeField; // Textfeld für die Reichweite
+    private JTextField logPathField; // Textfeld für den Log-Speicherort
 
+    // Konstruktor, der das BuildingManagementPanel und das Raumobjekt initialisiert
     public AddSafetyEquipmentPopup(BuildingManagementPanel bp, Room room) {
         super(bp, room);
     }
 
+    // Überschriebene Methode zum Initialisieren der Komponenten des Popups
     @Override
     protected void initComponents() {
-        super.initComponents(); 
+        super.initComponents(); // Aufruf der Superklassenmethode, um die allgemeinen Komponenten zu initialisieren
 
+        // Erstellen eines GridBagLayout Constraints-Objekts
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.gridx = 0;
         gbc.gridy = getLastGridY();
 
+        // Referenz auf das ContentPanel des Popups
         JPanel contentPanel = (JPanel) getContentPane();
 
+        // Hinzufügen der zusätzlichen Felder zum Panel
         addBatteryLifeField(contentPanel, gbc);
         gbc.gridy++;
-
         addConnectivityField(contentPanel, gbc);
         gbc.gridy++;
-
         addRangeField(contentPanel, gbc);
         gbc.gridy++;
-
         addLogPathField(contentPanel, gbc);
         
+        // Aktualisierung der Größe des Dialogs
         pack();
     }
 
+    // Methode zum Abrufen der letzten Zeilennummer in einem GridBagLayout
     private int getLastGridY() {
         LayoutManager layout = getContentPane().getLayout();
         if (layout instanceof GridBagLayout) {
@@ -59,6 +69,7 @@ public class AddSafetyEquipmentPopup extends AddGeneralEquipmentPopup {
         return 0; 
     }
 
+    // Methoden zum Hinzufügen der zusätzlichen Felder zum Panel
     private void addBatteryLifeField(JPanel panel, GridBagConstraints gbc) {
         JLabel batteryLifeLabel = new JLabel("Batterielebensdauer:");
         panel.add(batteryLifeLabel, gbc);
@@ -99,8 +110,10 @@ public class AddSafetyEquipmentPopup extends AddGeneralEquipmentPopup {
         gbc.gridx = 0;
     }
 
+    // Überschriebene Methode, die ausgeführt wird, wenn der "Equipment erstellen" Button gedrückt wird
     @Override
     protected void createButtonActionPerformed(ActionEvent e) {
+        // Erzeugen eines neuen SafetyEquipment-Objekts mit den Werten aus den Eingabefeldern
         SafetyEquipment equipment = new SafetyEquipment(
                 IdManager.generateNewId(),
                 nameField.getText(),
@@ -118,6 +131,7 @@ public class AddSafetyEquipmentPopup extends AddGeneralEquipmentPopup {
                 logPathField.getText());
         room.addEquipment(equipment);
 
+        // Speichern der Änderungen und Aktualisieren des Baums
         GlobalVerwaltung.getBuildingVerwaltung().saveBuildings();
         bp.reloadTree();
         dispose();

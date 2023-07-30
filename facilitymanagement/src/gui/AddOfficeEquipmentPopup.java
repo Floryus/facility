@@ -17,6 +17,8 @@ import java.time.ZoneId;
 /*
  * AddOfficeEquipmentPopup ist ein Popup-Fenster, das zur Erfassung von Büroausstattungsdaten verwendet wird.
  * Es erbt von AddGeneralEquipmentPopup und fügt zusätzliche Felder für Büroausstattung hinzu.
+ * 
+ * @author Alexander Ansorge
  */
 public class AddOfficeEquipmentPopup extends AddGeneralEquipmentPopup {
     private JTextField employeeField; // Textfeld für die Mitarbeiter ID

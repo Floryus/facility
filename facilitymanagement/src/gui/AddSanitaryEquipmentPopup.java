@@ -13,41 +13,51 @@ import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+/*
+ * AddSanitaryEquipmentPopup ist ein Popup-Fenster zur Erfassung von Sanitärausstattungsdaten.
+ * Es erweitert AddGeneralEquipmentPopup und fügt zusätzliche Felder speziell für Sanitärausrüstung hinzu.
+ * 
+ * @author Alexander Ansorge
+ */
 public class AddSanitaryEquipmentPopup extends AddGeneralEquipmentPopup {
-    private JCheckBox waterConnectionCheckBox;
-    private JCheckBox drainageConnectionCheckBox;
-    private JTextField cleaningRequirementField;
-    private JTextField operatingCompanyField;
+    private JCheckBox waterConnectionCheckBox; // CheckBox für Wasseranschluss
+    private JCheckBox drainageConnectionCheckBox; // CheckBox für Abwasseranschluss
+    private JTextField cleaningRequirementField; // Textfeld für Reinigungsbedarf
+    private JTextField operatingCompanyField; // Textfeld für Betriebsfirma
 
+    // Konstruktor, der das BuildingManagementPanel und das Raumobjekt initialisiert
     public AddSanitaryEquipmentPopup(BuildingManagementPanel bp, Room room) {
         super(bp, room);
     }
 
+    // Überschriebene Methode zum Initialisieren der Komponenten des Popups
     @Override
     protected void initComponents() {
-        super.initComponents();
+        super.initComponents(); // Aufruf der Superklassenmethode, um die allgemeinen Komponenten zu initialisieren
 
+        // Erstellen eines GridBagLayout Constraints-Objekts
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.gridx = 0;
         gbc.gridy = getLastGridY();
 
+        // Referenz auf das ContentPanel des Popups
         JPanel contentPanel = (JPanel) getContentPane();
 
+        // Hinzufügen der zusätzlichen Felder zum Panel
         addWaterConnectionField(contentPanel, gbc);
         gbc.gridy++;
-
         addDrainageConnectionField(contentPanel, gbc);
         gbc.gridy++;
-
         addCleaningRequirementField(contentPanel, gbc);
         gbc.gridy++;
-
         addOperatingCompanyField(contentPanel, gbc);
-
+        
+        // Aktualisierung der Größe des Dialogs
         pack();
     }
 
+    // Methode zum Abrufen der letzten Zeilennummer in einem GridBagLayout
     private int getLastGridY() {
         LayoutManager layout = getContentPane().getLayout();
         if (layout instanceof GridBagLayout) {
@@ -59,6 +69,7 @@ public class AddSanitaryEquipmentPopup extends AddGeneralEquipmentPopup {
         return 0;
     }
 
+    // Methoden zum Hinzufügen der zusätzlichen Felder zum Panel
     private void addWaterConnectionField(JPanel panel, GridBagConstraints gbc) {
         JLabel waterConnectionLabel = new JLabel("Wasseranschluss:");
         panel.add(waterConnectionLabel, gbc);
@@ -99,8 +110,10 @@ public class AddSanitaryEquipmentPopup extends AddGeneralEquipmentPopup {
         gbc.gridx = 0;
     }
 
+    // Überschriebene Methode, die ausgeführt wird, wenn der "Equipment erstellen" Button gedrückt wird
     @Override
     protected void createButtonActionPerformed(ActionEvent e) {
+        // Erzeugen eines neuen SanitaryEquipment-Objekts mit den Werten aus den Eingabefeldern
         SanitaryEquipment equipment = new SanitaryEquipment(
                 IdManager.generateNewId(),
                 nameField.getText(),
@@ -118,8 +131,11 @@ public class AddSanitaryEquipmentPopup extends AddGeneralEquipmentPopup {
                 operatingCompanyField.getText());
         room.addEquipment(equipment);
 
+        // Speichern der Gebäudedaten und Aktualisierung des Baumanagementspanels
         GlobalVerwaltung.getBuildingVerwaltung().saveBuildings();
         bp.reloadTree();
+
+        // Schließen des Popups
         dispose();
     }
 }

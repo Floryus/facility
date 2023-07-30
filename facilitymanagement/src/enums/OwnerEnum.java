@@ -6,5 +6,5 @@ package enums;
  * @author Alexander Ansorge
  */
 public enum OwnerEnum {
-    PRIVATE, COMPANY;
+    PRIVAT, FIRMA;
 }

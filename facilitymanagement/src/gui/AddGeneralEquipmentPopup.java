@@ -13,7 +13,13 @@ import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+/*
+ * AddGeneralEquipmentPopup ist ein Popup-Fenster, das zur Erfassung allgemeiner Ausrüstungsdaten verwendet wird.
+ *
+ * @author Alexander Ansorge
+ */
 public class AddGeneralEquipmentPopup extends JDialog {
+    // Erstellung von Textfeldern und ComboBoxes für die Eingabe von Ausrüstungsdaten
     protected JTextField nameField, manufacturerField, modelField;
     protected JComboBox<EquipTypeEnum> typeComboBox;
     protected JComboBox<EquipConditionEnum> conditionComboBox;
@@ -23,24 +29,29 @@ public class AddGeneralEquipmentPopup extends JDialog {
     protected BuildingManagementPanel bp;
     protected Room room;
 
+    // Konstruktor, der das BuildingManagementPanel und das Raumobjekt initialisiert
     public AddGeneralEquipmentPopup(BuildingManagementPanel bp, Room room) {
         this.room = room;
         this.bp = bp;
         initComponents();
     }
 
+    // Methode zum Initialisieren der Komponenten des Popups
     protected void initComponents() {
         setTitle("Neues Equipment hinzufügen");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        // Erstellung und Konfiguration des "Equipment erstellen" Buttons
         JButton createButton = new JButton("Equipment erstellen");
         createButton.addActionListener(e -> createButtonActionPerformed(e));
 
+        // Erstellung und Konfiguration des Panels für die Eingabefelder
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
+        // Hinzufügen von Eingabefeldern zum Panel
         addNameField(contentPanel, gbc);
         addTypeField(contentPanel, gbc);
         addManufacturerField(contentPanel, gbc);
@@ -50,18 +61,22 @@ public class AddGeneralEquipmentPopup extends JDialog {
         addConditionField(contentPanel, gbc);
         addFunctionalField(contentPanel, gbc);
 
+        // Hinzufügen des "Equipment erstellen" Buttons zum Panel
         gbc.gridx = 1;
         gbc.gridy++;
         gbc.anchor = GridBagConstraints.EAST;
         contentPanel.add(createButton, gbc);
 
+        // Hinzufügen des Panels zum Popup
         add(contentPanel, BorderLayout.CENTER);
 
         setContentPane(contentPanel);
         pack();
     }
 
+    // Aktion, die ausgeführt wird, wenn der "Equipment erstellen" Button gedrückt wird
     protected void createButtonActionPerformed(ActionEvent e) {
+        // Erzeugen eines neuen Equipment-Objekts mit den Werten aus den Eingabefeldern
         Equipment equipment = new Equipment(
                 IdManager.generateNewId(),
                 nameField.getText(),
@@ -77,12 +92,14 @@ public class AddGeneralEquipmentPopup extends JDialog {
                 functionalCheckBox.isSelected());
         room.addEquipment(equipment);
 
+        // Speichern der Änderungen und Aktualisieren des Baums
         GlobalVerwaltung.getBuildingVerwaltung().saveBuildings();
 
         bp.reloadTree();
         dispose();
     }
 
+    // Methode zum Hinzufügen des Namensfeldes zum Panel
     private void addNameField(JPanel panel, GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy++;
@@ -93,6 +110,7 @@ public class AddGeneralEquipmentPopup extends JDialog {
         panel.add(nameField, gbc);
     }
 
+    // Methode zum Hinzufügen des Typfeldes zum Panel
     private void addTypeField(JPanel panel, GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy++;
@@ -103,6 +121,7 @@ public class AddGeneralEquipmentPopup extends JDialog {
         panel.add(typeComboBox, gbc);
     }
 
+    // Methode zum Hinzufügen des Herstellerfeldes zum Panel
     private void addManufacturerField(JPanel panel, GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy++;
@@ -113,6 +132,7 @@ public class AddGeneralEquipmentPopup extends JDialog {
         panel.add(manufacturerField, gbc);
     }
 
+    // Methode zum Hinzufügen des Modellfeldes zum Panel
     private void addModelField(JPanel panel, GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy++;
@@ -123,6 +143,7 @@ public class AddGeneralEquipmentPopup extends JDialog {
         panel.add(modelField, gbc);
     }
 
+    // Methode zum Hinzufügen des Kaufdatumsfeldes zum Panel
     private void addDateOfPurchaseField(JPanel panel, GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy++;
@@ -133,6 +154,7 @@ public class AddGeneralEquipmentPopup extends JDialog {
         panel.add(dateOfPurchaseSpinner, gbc);
     }
 
+    // Methode zum Hinzufügen des Feldes für das letzte Wartungsdatum zum Panel
     private void addLastMaintenanceDateField(JPanel panel, GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy++;
@@ -143,6 +165,7 @@ public class AddGeneralEquipmentPopup extends JDialog {
         panel.add(lastMaintenanceDateSpinner, gbc);
     }
 
+    // Methode zum Hinzufügen des Zustandsfeldes zum Panel
     private void addConditionField(JPanel panel, GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy++;
@@ -153,6 +176,7 @@ public class AddGeneralEquipmentPopup extends JDialog {
         panel.add(conditionComboBox, gbc);
     }
 
+    // Methode zum Hinzufügen des Funktionsfeldes zum Panel
     private void addFunctionalField(JPanel panel, GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy++;
@@ -162,5 +186,4 @@ public class AddGeneralEquipmentPopup extends JDialog {
         functionalCheckBox = new JCheckBox();
         panel.add(functionalCheckBox, gbc);
     }
-
 }
