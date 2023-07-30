@@ -1,98 +1,128 @@
 package gui;
 
-import javax.swing.*;
-
 import enums.EquipTypeEnum;
-import global.GlobalVerwaltung;
-import maintainables.Equipment;
 import maintainables.Room;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/*
- * Das AddEquipmentPopup ist ein Popup, das ein neues Equipment erstellt und dem Raum hinzufügt.
- * 
- * @author: Florian Schmidt
+/**
+ * Das AddEquipmentPopup ist ein Dialogfenster, das das Hinzufügen einer neuen Ausrüstung ermöglicht.
+ * Es enthält eine JComboBox, um den Ausrüstungstyp auszuwählen, und einen "Weiter"-Button, um fortzufahren.
+ *
+ * @author Alexander Ansorge
  */
 public class AddEquipmentPopup extends JDialog {
-    private JTextField nameField;
-    private JComboBox<EquipTypeEnum> typeComboBox;
+    protected JComboBox<EquipTypeEnum> typeComboBox;
 
-    private BuildingManagementPanel bp;
-    private Room room;
+    protected BuildingManagementPanel bp;
+    protected Room room;
 
+    /**
+     * Erstellt ein neues AddEquipmentPopup Dialog.
+     *
+     * @param bp   Das BuildingManagementPanel, um die Baumansicht zu aktualisieren
+     * @param room Der Raum, in dem die Ausrüstung hinzugefügt werden soll
+     */
     public AddEquipmentPopup(BuildingManagementPanel bp, Room room) {
         this.room = room;
         this.bp = bp;
         initComponents();
     }
 
-    private void initComponents() {
-
-        setTitle("Neues Equipment hinzufügen");
+    /**
+     * Initialisiert die Komponenten des Dialogs.
+     */
+    protected void initComponents() {
+        setTitle("Equipment Typ auswählen");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Erzeuge den "Gebäude erstellen" Button
-        JButton createButton = new JButton("Etage erstellen");
-        createButton.addActionListener(new ActionListener() {
+        JButton continueButton = new JButton("Weiter");
+        continueButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // createLevel
-
-                // Erzeuge ein neues Equipment und füge sie hinzu
-                Equipment equipment = new Equipment(nameField.getText(), (EquipTypeEnum) typeComboBox.getSelectedItem(),
-                        room);
-                room.addEquipment(equipment);
-
-                // Speichere die Änderungen
-                GlobalVerwaltung.getBuildingVerwaltung().saveBuildings();
-
-                // Aktualisiere die Baumansicht
-                bp.reloadTree();
-
-                // Schließe das Popup-Fenster
-                dispose();
+                continueButtonActionPerformed(e);
             }
         });
 
-        // Erzeuge das Panel für die Eingabefelder
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Name
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        JLabel nameLabel = new JLabel("Name:");
-        contentPanel.add(nameLabel, gbc);
-        gbc.gridx = 1;
-        nameField = new JTextField(20);
-        contentPanel.add(nameField, gbc);
+        addTypeField(contentPanel, gbc);
 
-        // Typ
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        JLabel typeLabel = new JLabel("Typ:");
-        contentPanel.add(typeLabel, gbc);
         gbc.gridx = 1;
-        typeComboBox = new JComboBox<>(EquipTypeEnum.values());
-        contentPanel.add(typeComboBox, gbc);
-
-        // Button-Panel am unteren Rand
-        gbc.gridx = 1;
-        gbc.gridy = 5;
+        gbc.gridy++;
         gbc.anchor = GridBagConstraints.EAST;
-        contentPanel.add(createButton, gbc);
+        contentPanel.add(continueButton, gbc);
 
         add(contentPanel, BorderLayout.CENTER);
 
-        // Setze das Panel als Inhalt des Popups
         setContentPane(contentPanel);
         pack();
-
     }
 
+    /**
+     * Behandelt das ActionEvent des "Weiter"-Buttons.
+     * Öffnet ein neues Dialogfenster basierend auf dem ausgewählten Ausrüstungstyp und schließt das aktuelle Dialogfenster.
+     *
+     * @param e Das ActionEvent
+     */
+    protected void continueButtonActionPerformed(ActionEvent e) {
+        EquipTypeEnum selectedType = (EquipTypeEnum) typeComboBox.getSelectedItem();
+
+        switch (selectedType) {
+            case ALARMSYSTEM, KAMERA, NOTBELEUCHTUNG, SICHERHEITSTÜR, FEUERLÖSCHER, FEUERMELDER:
+                JDialog safetyEquipmentPopup = new AddSafetyEquipmentPopup(bp, room);
+                safetyEquipmentPopup.setModal(true);
+                safetyEquipmentPopup.setVisible(true);
+                safetyEquipmentPopup.dispose();
+                break;
+            case TOILETTE, WASCHBECKEN, URINAL:
+                JDialog sanitaryEquipmentPopup = new AddSanitaryEquipmentPopup(bp, room);
+                sanitaryEquipmentPopup.setModal(true);
+                sanitaryEquipmentPopup.setVisible(true);
+                sanitaryEquipmentPopup.dispose();
+                break;
+            case PROJEKTOR, WHITEBOARD, STUHL, TISCH, PFLANZE:
+                JDialog officeEquipmentPopup = new AddOfficeEquipmentPopup(bp, room);
+                officeEquipmentPopup.setModal(true);
+                officeEquipmentPopup.setVisible(true);
+                officeEquipmentPopup.dispose();
+                break;
+            case DRUCKER, ROUTER, SPRINKLERANLAGE, LAMPE, TELEFONANLAGE, HEIZUNG, KLIMAANLAGE, BELÜFTUNGSSYSTEM:
+                JDialog technicalEquipmentPopup = new AddTechnicalEquipmentPopup(bp, room);
+                technicalEquipmentPopup.setModal(true);
+                technicalEquipmentPopup.setVisible(true);
+                technicalEquipmentPopup.dispose();
+                break;
+            default:
+                JDialog equipmentPopup = new AddGeneralEquipmentPopup(bp, room);
+                equipmentPopup.setModal(true);
+                equipmentPopup.setVisible(true);
+                equipmentPopup.dispose();
+                break;
+        }
+
+        dispose();
+    }
+
+    /**
+     * Fügt das "Typ" JLabel und die JComboBox für die Ausrüstungstypen zum gegebenen Panel hinzu.
+     *
+     * @param panel Das Panel, zu dem das Feld hinzugefügt werden soll
+     * @param gbc   Das GridBagConstraints-Objekt für das Layout des Panels
+     */
+    private void addTypeField(JPanel panel, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy++;
+        JLabel typeLabel = new JLabel("Typ:");
+        panel.add(typeLabel, gbc);
+        gbc.gridx = 1;
+        typeComboBox = new JComboBox<>(EquipTypeEnum.values());
+        panel.add(typeComboBox, gbc);
+    }
 }

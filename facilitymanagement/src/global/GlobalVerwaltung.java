@@ -12,7 +12,7 @@ import todos.TodoVerwaltung;
  * Die GlobalVerwaltung hat also die Aufgabe, die einzelnen Verwaltungsobjekte zu erzeugen, zu verwalten und sie für alle anderen 
  * Methoden zugänglich zu machen.
  * 
- * @author Florian Schmidt
+ * @author Florian Schmidt, Alexander Ansorge
  */
 public class GlobalVerwaltung {
     private static BuildingVerwaltung buildingVerwaltung = new BuildingVerwaltung();

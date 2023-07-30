@@ -9,7 +9,7 @@ import javax.swing.event.ChangeListener;
 /*
  * Die FullScreenMain-Klasse ist die Startseite des Programms und enthält alle Tabs.
  * 
- * @author Florian Schmidt
+ * @author Florian Schmidt, Alexander Ansorge
  */
 public class FullScreenMain extends JFrame {
 
@@ -17,6 +17,7 @@ public class FullScreenMain extends JFrame {
     private JPanel todoSystemPanel;
     private JPanel employeeManagementPanel;
     private JPanel taskOverviewPanel;
+    private JPanel equipmentManagementPanel;
 
     public FullScreenMain() {
         super("Full Screen Main");
@@ -37,11 +38,13 @@ public class FullScreenMain extends JFrame {
         todoSystemPanel = createTodoSystemPanel();
         employeeManagementPanel = createEmployeeManagementPanel();
         taskOverviewPanel = createTaskOverviewPanel();
+        equipmentManagementPanel = createEquipmentManagementPanel();
 
         tabbedPane.addTab("Gebäudeverwaltung", buildingManagementPanel);
         tabbedPane.addTab("Aufgabenverwaltung", todoSystemPanel);
         tabbedPane.addTab("Mitarbeiterverwaltung", employeeManagementPanel);
         tabbedPane.addTab("Aufgabenübersicht", taskOverviewPanel);
+        tabbedPane.addTab("Equipmentverwaltung", equipmentManagementPanel);
 
         // Add a ChangeListener to the tabbed pane
         tabbedPane.addChangeListener(new ChangeListener() {
@@ -63,6 +66,7 @@ public class FullScreenMain extends JFrame {
         todoSystemPanel = createTodoSystemPanel();
         employeeManagementPanel = createEmployeeManagementPanel();
         taskOverviewPanel = createTaskOverviewPanel();
+        equipmentManagementPanel = createEquipmentManagementPanel();
     }
 
     private JPanel createBuildingManagementPanel() {
@@ -79,6 +83,10 @@ public class FullScreenMain extends JFrame {
 
     private JPanel createTaskOverviewPanel() {
         return new TodoOverviewPanel();
+    }
+
+    private JPanel createEquipmentManagementPanel() {
+        return new EquipmentManagementPanel();
     }
 
 }

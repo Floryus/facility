@@ -10,12 +10,7 @@ public enum EquipTypeEnum {
     WHITEBOARD,
     STUHL,
     TISCH,
-    HEIZUNG,
     PFLANZE,
-    KLIMAANLAGE,
-    BELÜFTUNGSSYSTEM,
-    FEUERLÖSCHER,
-    FEUERMELDER,
 
     // Sanitärausstattung
     TOILETTE,
@@ -27,11 +22,19 @@ public enum EquipTypeEnum {
     KAMERA,
     NOTBELEUCHTUNG,
     SICHERHEITSTÜR,
+    FEUERLÖSCHER,
+    FEUERMELDER,
 
     // Technische Ausstattung
     DRUCKER,
     ROUTER,
     SPRINKLERANLAGE,
     LAMPE,
-    TELEFONANLAGE
+    TELEFONANLAGE,
+    HEIZUNG,
+    KLIMAANLAGE,
+    BELÜFTUNGSSYSTEM,
+
+    // Sonstiges
+    SONSTIGE,
 }
