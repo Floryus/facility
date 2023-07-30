@@ -9,16 +9,19 @@ import maintainables.Room;
 
 /**
  * Die Klasse RoomTest testet die einzelnen Methoden der Room-Klasse.
- * Es werden alle Methoden aufgerufen und die Ergebnisse in der Konsole ausgegeben.
+ * Es werden alle Methoden aufgerufen und die Ergebnisse in der Konsole
+ * ausgegeben.
  * 
  * 
- * @author [Dein Name]
+ * @author Marten Tietje
  * 
  */
 public class RoomTest {
     public static void testRoomMethods() {
 
-        /* Erstellung eines Objekts der Klasse Level, welches für das Room benötigt wird */
+        /*
+         * Erstellung eines Objekts der Klasse Level, welches für das Room benötigt wird
+         */
         Level level = new Level(1, 10, new Building("SAP", "Dietmar Hopp Allee", "16a", "Walldorf", 5));
 
         /* Erstellung eines Objekts der Klasse Room */
@@ -46,10 +49,9 @@ public class RoomTest {
         room.removeEquipment(equipment1);
         System.out.println("Room Equipment after removal: " + room.getEquipment());
 
-        
         /* Test to String */
         System.out.println("Room to String: " + room.toString());
-        
+
         System.out.println("RoomTest completed");
     }
 }
