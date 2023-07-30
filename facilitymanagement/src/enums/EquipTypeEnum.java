@@ -34,4 +34,7 @@ public enum EquipTypeEnum {
     HEIZUNG,
     KLIMAANLAGE,
     BELÜFTUNGSSYSTEM,
+
+    // Sonstiges
+    SONSTIGE,
 }
